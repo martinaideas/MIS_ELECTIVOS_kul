@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>ELECTIVOS DE DISEÑO</title>
+        <style>
+            *, *::before, *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            :root {
+                --color-oscurisimo: #ffffff;
+                --color-oscuro:#094293;
+                --color-normal: #1f104f;
+                --color-iluminado: #5564eb;
+                --color-iluminadisimo: #5e5ee6;
+                --fuente-sans:Montserrat;
+                
+            }
+
+            body {
+                font-family: var(--fuente-sans);
+                color: var(--color-normal);
+                text-align: center;
+                font-size: 100%;
+            }
+            div#contenedor {
+                margin: 1rem auto;
+                width: 90%;
+                max-width: 780px;
+            }
+
+            h1 {
+                margin: 1rem 0;
+                font-weight: 400;
+                font-size: calc(100% + 3vw + 3vh);
+            }
+
+            h2 {
+                margin: 3rem 0;
+                font-weight: 400;
+                letter-spacing: 0.25rem;
+                font-size: calc(100% + 1vw + 1vh);
+                color: var(--color-oscuro);
+            }
+
+            input {
+                border: 0.1rem solid var(--color-iluminado);
+                padding: 0.5rem 1rem;
+                font-family: inherit;
+                font-size: 15px;
+                color: var(--color-oscuro);
+                outline: none;
+                margin-bottom: 1.5rem;
+                width: 100%;
+                display: block;
+                background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="lightblue" class="bi bi-balloon-heart" viewBox="0 0 16 16"><path fill-rule="evenodd" d="m8 2.42-.717-.737c-1.13-1.161-3.243-.777-4.01.72-.35.685-.451 1.707.236 3.062C4.16 6.753 5.52 8.32 8 10.042c2.479-1.723 3.839-3.29 4.491-4.577.687-1.355.587-2.377.236-3.061-.767-1.498-2.88-1.882-4.01-.721zm-.49 8.5c-10.78-7.44-3-13.155.359-10.063q.068.062.132.129.065-.067.132-.129c3.36-3.092 11.137 2.624.357 10.063l.235.468a.25.25 0 1 1-.448.224l-.008-.017c.008.11.02.202.037.29.054.27.161.488.419 1.003.288.578.235 1.15.076 1.629-.157.469-.422.867-.588 1.115l-.004.007a.25.25 0 1 1-.416-.278c.168-.252.4-.6.533-1.003.133-.396.163-.824-.049-1.246l-.013-.028c-.24-.48-.38-.758-.448-1.102a3 3 0 0 1-.052-.45l-.04.08a.25.25 0 1 1-.447-.224l.235-.468ZM6.013 2.06c-.649-.18-1.483.083-1.85.798-.131.258-.245.689-.08 1.335.063.244.414.198.487-.043.21-.697.627-1.447 1.359-1.692.217-.073.304-.337.084-.398"/></svg>');
+                background-repeat: no-repeat;
+                background-size: 1rem;
+                background-position: 99% center;
+            }
+
+            input::placeholder {
+                color: var(--color-iluminado);
+            }
+
+            input:focus {
+                border-color: var(--color-normal);
+            }
+
+            div#contenedordetabla {
+                overflow-x: auto;
+                font-size: 90%;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                text-align: left;
+                margin-bottom: 3rem;
+            }
+
+            thead {
+                background: var(--color-iluminado);
+            }
+
+            td,
+            th {
+                border: 1px solid var(--color-normal);
+                padding: 0.75rem;
+            }
+
+            td:nth-child(1),
+            th:nth-child(1),
+            td:nth-child(3),
+            th:nth-child(3) {
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="contenedor">
+            <h1>ᕙ( •̀ ᗜ •́ )ᕗ</h1>
+            <h2>ELECTIVOS DE DISEÑO</h2>
+
+            <input type="text" id="elInput" placeholder="Filtrar electivos…" />
+            <div id="contenedordetabla">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N°</th>
+                            <th>Asignatura electiva</th>
+                            <th>Mención</th>
+                            <th>Grupo</th>
+                            <th>Enfoque</th>
+                        </tr>
+                    </thead>
+                    <tbody id="este"></tbody>
+                </table>
+            </div>
+            <small>Diseño y visualización de información</small>
+        </div>
+
+        <script>
+            const t = document.querySelector("#este");
+            const URL = "https://api.myjson.online/v1/records/5e6e1456-52b8-48d4-a1fc-a8af8accca78";
+
+            fetch(URL)
+                .then((respuesta) => {
+                    if (!respuesta.ok) {
+                        throw new Error("Error HTTP: " + respuesta.status);
+                    }
+                    return respuesta.json();
+                })
+                .then((datos) => {
+                    var trabajo = datos.data;
+                    console.log(trabajo);
+                    trabajo.forEach((x) => {
+                        t.innerHTML += `<tr style="${x.ok == 1 ? "background-color: var(--color-iluminadisimo); color: var(--color-oscurisimo)" : ""}"><td>${x.id}</td><td>${x.name}</td><td>${x.track}</td><td>${x.group}</td><td>${x.focus}</td></tr>`;
+                    });
+                })
+                .catch((error) => {
+                    console.error("Algo salió mal:", error);
+                });
+
+            function sinAcentos(str) {
+                return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            }
+
+            document.getElementById("elInput").addEventListener("keyup", function () {
+                const valor = sinAcentos(this.value.toLowerCase());
+                document.querySelectorAll("#este tr").forEach(function (fila) {
+                    fila.style.display = sinAcentos(fila.textContent.toLowerCase()).includes(valor) ? "" : "none";
+                });
+            });
+        </script>
+    </body>
+</html>
